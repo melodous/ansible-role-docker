@@ -1,0 +1,10 @@
+---
+galaxy_info:
+  author: Raul Melo
+  description: Install docker engine
+  company: OpenSolutions
+  platforms:
+    - name: RedHat
+      versions:
+        - 7
+dependencies: []

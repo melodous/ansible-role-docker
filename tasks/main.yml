@@ -1,0 +1,96 @@
+---
+- name: copy docker logrotate configurations
+  copy:
+    src: "docker.logrotate"
+    dest: "/etc/logrotate.d/docker"
+    mode: 0644
+    owner: root
+    group: root
+
+- name: create docker log archive
+  file:
+    path: "/var/log/docker/archive"
+    mode: 0755
+    state: directory
+
+- name: install docker packages
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - "{{ docker_package }}"
+
+- include: lvm.yml
+  when: docker_lvm
+
+- name: Configure file descriptors limit soft
+  lineinfile:
+    dest: "/etc/security/limits.conf"
+    line: "* soft nofile {{ docker_file_max - 20000 }}"
+
+- name: Configure file descriptors limit hard
+  lineinfile:
+    dest: "/etc/security/limits.conf"
+    line: "* hard nofile {{ docker_file_max - 20000 }}"
+
+- name: Enable ipforwarding
+  sysctl:
+    name: net.ipv4.conf.all.forwarding
+    value: 1
+    state: present
+    ignoreerrors: yes
+
+- name: Change fs.inotify.max_user_instances
+  sysctl:
+    name: fs.inotify.max_user_instances
+    value: 8192
+    state: present
+    ignoreerrors: yes
+
+- name: Change fs.file-max
+  sysctl:
+    name: fs.file-max
+    value: "{{ docker_file_max }}"
+    state: present
+    ignoreerrors: yes
+
+- name: Create docker group
+  group: name=docker
+
+- name: Create registry cert folder
+  file: path=/etc/docker/certs.d/{{ docker_artifactory }} state=directory
+  when: docker_artifactory | default('') != ''
+
+- name: Deploy registry cert
+  copy: src=ca.crt dest=/etc/docker/certs.d/{{ docker_artifactory }}/ca.crt
+  when: docker_artifactory | default('') != ''
+
+- name: Insecure registry
+  lineinfile: path=/etc/sysconfig/docker regexp='^INSECURE_REGISTRY=' line='INSECURE_REGISTRY="--insecure-registry {{ docker_artifactory }}"'
+
+- name: enable docker
+  service:
+    name: docker
+    enabled: yes
+    state: started
+  ignore_errors: docker_role_debug | bool
+  when: docker_start
+
+#For use ansible docker module
+- name: Install pip
+  yum: name=python-pip
+
+- name: Configure local pypi repository
+  template: src=pip.conf.j2 dest=/etc/pip.conf owner=root group=root mode=0750
+  when: pypi_artifactory | default('') != ''
+
+#For use ansible docker module
+- name: Install urlib from pip
+  pip: name={{ item }} state=latest
+  with_items:
+    - requests
+    - urllib3
+    - docker-py
+
+- meta: flush_handlers
+

@@ -1,0 +1,33 @@
+- name: Get docker partition
+  stat: path={{docker_storage_device}}1
+  register: docker_partition_info
+
+- name: Label docker disk
+  shell: "parted -s {{docker_storage_device}} mklabel msdos"
+  when: not docker_partition_info.stat.exists
+
+- name: Create docker partition
+  shell: "parted -s {{docker_storage_device}} mkpart primary xfs 1MB {{docker_vg_size}}"
+  when: not docker_partition_info.stat.exists
+  register: docker_partition
+
+- name: Create docker VG
+  lvg: vg=vg_docker pvs={{docker_storage_device}}1
+  when: docker_partition.changed
+  register: docker_storage
+
+- name: Configure docker storage
+  template: src=docker-storage-setup.j2 dest=/etc/sysconfig/docker-storage-setup
+
+- name: Clean old storage configuration
+  file: path=/etc/sysconfig/docker-storage state=absent
+  register: docker_storage_clean
+  when: docker_storage.changed
+
+- name: Clean docker metadata
+  file: path=/var/lib/docker state=absent
+  when: docker_storage.changed
+
+- name: Run docker-storage-setup
+  shell: /bin/docker-storage-setup
+

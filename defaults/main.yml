@@ -1,0 +1,5 @@
+docker_package: docker
+docker_role_debug: false
+docker_start: true
+docker_file_max: 120000
+docker_lvm: false
