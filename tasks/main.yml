@@ -58,16 +58,16 @@
   group: name=docker
 
 - name: Create registry cert folder
-  file: path=/etc/docker/certs.d/{{ docker_artifactory }} state=directory
-  when: docker_artifactory | default('') != ''
+  file: path=/etc/docker/certs.d/{{ docker_private_registry }} state=directory
+  when: docker_private_registry | default(false)
 
 - name: Deploy registry cert
-  copy: src=ca.crt dest=/etc/docker/certs.d/{{ docker_artifactory }}/ca.crt
-  when: docker_artifactory | default('') != ''
+  copy: src=ca.crt dest=/etc/docker/certs.d/{{ docker_private_registry }}/ca.crt
+  when: docker_private_registry | default(false)
 
 - name: Insecure registry
-  lineinfile: path=/etc/sysconfig/docker regexp='^INSECURE_REGISTRY=' line='INSECURE_REGISTRY="--insecure-registry {{ docker_artifactory }}"'
-  when: docker_artifactory | default('') != ''
+  lineinfile: path=/etc/sysconfig/docker regexp='^INSECURE_REGISTRY=' line='INSECURE_REGISTRY="--insecure-registry {{ docker_private_registry }}"'
+  when: docker_private_registry | default(false) and docker_private_registry_insecure
 
 - name: enable docker
   service:
