@@ -3,5 +3,7 @@ docker_role_debug: false
 docker_start: true
 docker_file_max: 120000
 docker_lvm: false
+docker_login_user: false
+docker_login_password: false
 docker_private_registry: false
 docker_private_registry_insecure: false

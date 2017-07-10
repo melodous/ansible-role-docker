@@ -68,6 +68,7 @@
 - name: Insecure registry
   lineinfile: path=/etc/sysconfig/docker regexp='^INSECURE_REGISTRY=' line='INSECURE_REGISTRY="--insecure-registry {{ docker_private_registry }}"'
   when: docker_private_registry | default(false) and docker_private_registry_insecure
+  notify: restart docker
 
 - name: enable docker
   service:
@@ -95,3 +96,9 @@
 
 - meta: flush_handlers
 
+- name: Log into private registry
+  docker_login:
+    registry: "{{ docker_private_registry }}"
+    username: "{{ docker_login_user }}"
+    password: "{{ docker_login_password }}"
+  when: docker_private_registry and docker_login_user
