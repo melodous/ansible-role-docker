@@ -6,7 +6,7 @@ This role install docker engine on the server, and configure the logging, monito
 Requirements
 ------------
 
-Yum repsitorios with access to docker rpms,
+Yum repsitorios with access to docker and pip rpms
 
 Dependencies
 ------------

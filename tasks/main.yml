@@ -93,6 +93,8 @@
     - requests
     - urllib3
     - docker-py
+  tags:
+    - skip_ansible_lint
 
 - meta: flush_handlers
 

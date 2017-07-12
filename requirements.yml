@@ -1,0 +1,4 @@
+- src: https://github.com/melodous/ansible-role-repos.git
+  scm: git
+  version: master
+  name: repos
