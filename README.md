@@ -9,7 +9,7 @@ logging, monitoring and tunnig necesary to work correctly on RHEL7.
 
 ### Requirements
 
-Yum repsitorios with access to docker rpms,
+Yum repsitorios with access to docker and pip rpms
 
 ### Dependencies
 
@@ -97,6 +97,12 @@ changelog.
 ##### Changed
 
 -   First change
+
+### docker v0.0.2 - 2017/07/12
+
+##### Added
+
+-   Added tests
 
 ### docker v0.0.1 - 2017/07/12
 
