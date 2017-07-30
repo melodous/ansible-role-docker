@@ -1,0 +1,24 @@
+---
+
+- name: Create zabbix modules dir
+  file: state=directory owner=zabbix group=zabbix mode=0755 dest="{{ item }}"
+  with_items: 
+    - /usr/lib64/zabbix
+    - /usr/lib64/zabbix/modules
+
+- name: Copy zabbix docker module
+  copy: src=zabbix_module_docker.so dest=/usr/lib64/zabbix/modules owner=zabbix group=zabbix mode=0755
+  notify: restart zabbix-agent
+
+- name: Copy sudo file to permit zabbix excute lvs command as root
+  copy: src=zabbix_lvm dest=/etc/sudoers.d/zabbix_lvm owner=root group=root mode=0600
+
+- name: Coping userparameters
+  copy: src="{{ item }}" dest="/etc/zabbix/zabbix_agentd.d/{{ item }}" owner=zabbix group=zabbix mode=0644
+  with_items:
+    - docker.conf
+    - userparameters_lvm.conf
+  notify: restart zabbix-agent
+
+- name: Add zabbix to docker group
+  user: name=zabbix groups=docker append=yes

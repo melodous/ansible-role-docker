@@ -7,4 +7,5 @@ galaxy_info:
     - name: RedHat
       versions:
         - 7
-dependencies: []
+dependencies:
+  - zabbix_tools

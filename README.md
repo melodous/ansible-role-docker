@@ -29,6 +29,7 @@ docker ansible role default variables
 -   docker management
 -   docker lvm storage management
 -   docker private registry management
+-   docker monitoring configuration
 
 ### docker management
 
@@ -80,6 +81,14 @@ docker ansible role default variables
 
     docker_private_registry_insecure: false
 
+### docker monitoring configuration
+
+`docker_monitoring`
+
+> Enable monitoring of docker container for zabbix
+
+    docker_monitoring: true
+
 Changelog
 ---------
 
@@ -97,6 +106,12 @@ changelog.
 ##### Changed
 
 -   First change
+
+### docker v0.0.2 - 2017/07/30
+
+##### Added
+
+-   Added monitoring for proccess and lvmthin
 
 ### docker v0.0.2 - 2017/07/12
 

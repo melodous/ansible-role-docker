@@ -21,6 +21,15 @@ Changed
 
 - First change
 
+docker v0.0.2 - 2017/07/30
+--------------------------
+
+Added
+~~~~~
+
+- Added monitoring for proccess and lvmthin
+
+
 docker v0.0.2 - 2017/07/12
 --------------------------
 

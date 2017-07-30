@@ -134,3 +134,17 @@ docker private registry management
 
 
 
+
+docker monitoring configuration
+-------------------------------
+
+.. envvar:: docker_monitoring
+
+   Enable monitoring of docker container for zabbix
+
+::
+
+  docker_monitoring: true
+
+
+

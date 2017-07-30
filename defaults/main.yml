@@ -102,3 +102,14 @@ docker_private_registry: false
 docker_private_registry_insecure: false
 #
 # ]]]
+
+# docker monitoring configuration
+# -------------------------------
+
+# .. envvar:: docker_monitoring [[[
+#
+#    Enable monitoring of docker container for zabbix
+#
+docker_monitoring: true
+#
+# ]]]
