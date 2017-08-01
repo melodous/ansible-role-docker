@@ -8,4 +8,4 @@ galaxy_info:
       versions:
         - 7
 dependencies:
-  - zabbix_tools
+  - zabbix-tools
